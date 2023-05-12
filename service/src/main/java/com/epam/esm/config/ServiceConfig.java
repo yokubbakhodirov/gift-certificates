@@ -2,9 +2,12 @@ package com.epam.esm.config;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 @Configuration
-@ComponentScan("com.epam.esm")
+@ComponentScan(basePackages = "com.epam.esm")
+@EnableAspectJAutoProxy
 public class ServiceConfig  {
 
 }
+

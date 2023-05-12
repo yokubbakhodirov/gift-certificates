@@ -11,7 +11,7 @@ public class BindingResultChecker {
     public static void check(BindingResult bindingResult) throws BindingResultException {
         if (bindingResult.hasErrors()) {
             List<String> errors = bindingResult.getFieldErrors().stream()
-                    .map(error -> error.getObjectName() + " : " + error.getDefaultMessage())
+                    .map(error -> error.getField() + " " + error.getDefaultMessage())
                     .toList();
 
             throw new BindingResultException(errors.toArray(new String[errors.size()]));

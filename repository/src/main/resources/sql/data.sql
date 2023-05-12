@@ -26,5 +26,3 @@ CREATE TABLE gift_certificate_tag
 DROP TABLE gift_certificate_tag;
 DROP TABLE tag;
 DROP TABLE gift_certificate;
-SELECT DISTINCT gc.* FROM gift_certificate gc LEFT JOIN gift_certificate_tag gct ON gc.id = gct.gift_certificate_id
-    LEFT JOIN tag t ON t.id = gct.tag_id WHERE t.name = 'tag 1' AND (gc.name LIKE '%des%' OR gc.description LIKE '%des%');

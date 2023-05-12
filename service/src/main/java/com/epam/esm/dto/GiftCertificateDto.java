@@ -1,6 +1,5 @@
 package com.epam.esm.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -32,10 +31,8 @@ public class GiftCertificateDto {
     @Positive(message = "duration must be positive")
     private Integer duration;
 
-    @JsonIgnore
     private String createDate;
 
-    @JsonIgnore
     private String lastUpdateDate;
 
     private TagDto[] tags;

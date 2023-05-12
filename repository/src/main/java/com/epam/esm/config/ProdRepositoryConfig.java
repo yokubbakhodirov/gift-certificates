@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.sql.DataSource;
 
 @Profile("prod")
+@EnableAspectJAutoProxy
 @RequiredArgsConstructor
 @EnableTransactionManagement
 @ComponentScan("com.epam.esm")

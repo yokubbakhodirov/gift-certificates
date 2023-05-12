@@ -23,20 +23,17 @@
     </properties>
 
     <dependencies>
-        <!--        dependencies for validation-->
-        <!-- https://mvnrepository.com/artifact/jakarta.validation/jakarta.validation-api -->
+        <!--         validation-->
         <dependency>
             <groupId>jakarta.validation</groupId>
             <artifactId>jakarta.validation-api</artifactId>
             <version>3.0.2</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.hibernate.validator/hibernate-validator -->
         <dependency>
             <groupId>org.hibernate.validator</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>8.0.0.Final</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.glassfish/jakarta.el -->
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.el</artifactId>
@@ -58,6 +55,13 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <version>${spring.version}</version>
+        </dependency>
+
+<!--                aspect-->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.9.19</version>
         </dependency>
 
         <!--        jakarta servlet-->
@@ -137,6 +141,7 @@
             <scope>test</scope>
         </dependency>
 
+<!--               others-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>

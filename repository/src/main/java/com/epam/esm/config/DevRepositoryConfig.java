@@ -12,6 +12,7 @@ import javax.sql.DataSource;
 
 
 @Profile("dev")
+@EnableAspectJAutoProxy
 @RequiredArgsConstructor
 @EnableTransactionManagement
 @ComponentScan("com.epam.esm")

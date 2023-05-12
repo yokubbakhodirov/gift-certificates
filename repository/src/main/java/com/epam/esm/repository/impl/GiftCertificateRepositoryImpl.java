@@ -5,8 +5,6 @@ import com.epam.esm.repository.GiftCertificateRepository;
 import com.epam.esm.util.mapper.GiftCertificateRowMapper;
 import com.epam.esm.util.mapper.TagRowMapper;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -22,11 +20,9 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
     private final JdbcTemplate jdbcTemplate;
     private final GiftCertificateRowMapper giftCertificateRowMapper;
     private final TagRowMapper tagRowMapper;
-    private final Logger logger = LoggerFactory.getLogger(GiftCertificateRepositoryImpl.class);
 
     @Override
     public GiftCertificate findById(Long id) {
-        logger.debug("Finding gift certificate by ID: {}", id);
         GiftCertificate giftCertificate = jdbcTemplate.queryForObject(FIND_GIFT_CERTIFICATE_BY_ID, giftCertificateRowMapper, id);
         setTags(giftCertificate);
         return giftCertificate;
@@ -34,7 +30,6 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
 
     @Override
     public List<GiftCertificate> findAll(String tagName, String search, String sort) {
-        logger.debug("Finding all gift certificates");
         if (tagName == null && search == null && sort == null) {
             List<GiftCertificate> giftCertificates = jdbcTemplate.query(FIND_ALL_GIFT_CERTIFICATES, giftCertificateRowMapper);
             giftCertificates.forEach(this::setTags);
@@ -72,7 +67,6 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
             });
         }
 
-        System.out.println(sql.toString());
         List<GiftCertificate> giftCertificates = jdbcTemplate.query(sql.toString(), giftCertificateRowMapper);
         giftCertificates.forEach(this::setTags);
         return giftCertificates;
@@ -80,7 +74,6 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
 
     @Override
     public Long insert(GiftCertificate giftCertificate) {
-        logger.debug("Inserting gift certificate: {}", giftCertificate);
         return jdbcTemplate.queryForObject(
                 INSERT_GIFT_CERTIFICATE, Long.class,
                 giftCertificate.getName(),
@@ -91,7 +84,6 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
 
     @Override
     public void update(GiftCertificate giftCertificate) {
-        logger.debug("Updating gift certificate: {}", giftCertificate);
         jdbcTemplate.update(UPDATE_GIFT_CERTIFICATE,
                 giftCertificate.getName(),
                 giftCertificate.getDescription(),
@@ -102,7 +94,6 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
 
     @Override
     public void delete(Long id) {
-        logger.debug("Deleting gift certificate by ID: {}", id);
         jdbcTemplate.update(DELETE_GIFT_CERTIFICATE, id);
     }
 
@@ -111,19 +102,17 @@ public class GiftCertificateRepositoryImpl implements GiftCertificateRepository 
         if (giftCertificate.getTags() == null || giftCertificate.getTags().size() == 0) {
             return;
         }
-        logger.debug("Inserting gift certificate and tag relation");
         giftCertificate.getTags().forEach(tag -> {
             try {
+                System.out.println("s");
                 jdbcTemplate.update(INSERT_GIFT_CERTIFICATE_TAG, giftCertificate.getId(), tag.getId());
             } catch (DuplicateKeyException e) {
-                logger.debug(e.toString());
             }
         });
     }
 
     public void setTags(GiftCertificate giftCertificate) {
         if (giftCertificate != null) {
-            logger.debug("Finding tags of gift certificate with ID: {}", giftCertificate.getId());
             giftCertificate.getTags().addAll(
                     jdbcTemplate.query(FIND_ALL_TAGS_OF_GIFT_CERTIFICATE, tagRowMapper, giftCertificate.getId()));
         }

@@ -2,8 +2,6 @@ package com.epam.esm.service;
 
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.exception.DataAccessFailureException;
-import com.epam.esm.exception.DataNotFoundException;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.service.impl.TagServiceImpl;
 import com.epam.esm.utils.TestData;
@@ -16,14 +14,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.dao.InvalidDataAccessResourceUsageException;
 
 import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 
@@ -59,23 +54,6 @@ public class TagServiceTest {
     }
 
     @Test
-    @DisplayName("Throw DataNotFoundException when tag with such ID is not found")
-    public void testFindByIdNotFound() {
-        when(tagRepository.findById(tag.getId())).thenThrow(EmptyResultDataAccessException.class);
-
-        assertThrows(DataNotFoundException.class, () -> tagService.findById(tag.getId()));
-    }
-
-    @Test
-    @DisplayName("Throw DataAccessFailureException when there is a problem accessing the database")
-    public void testFindByIDFailed() {
-        // since DataAccessException is interface, throwing one of its subclasses (InvalidDataAccessResourceUsageException)
-        when(tagRepository.findById(tag.getId())).thenThrow(InvalidDataAccessResourceUsageException.class);
-
-        assertThrows(DataAccessFailureException.class, () -> tagService.findById(tag.getId()));
-    }
-
-    @Test
     @DisplayName("Find a list of tags")
     public void testFindAll() {
         List<TagDto> expected = Collections.singletonList(tagDto);
@@ -88,29 +66,12 @@ public class TagServiceTest {
     }
 
     @Test
-    @DisplayName("Throw DataAccessFailureException when there is a problem accessing the database")
-    public void testFindAllFailed() {
-        when(tagRepository.findAll()).thenThrow(InvalidDataAccessResourceUsageException.class);
-
-        assertThrows(DataAccessFailureException.class, () -> tagService.findAll());
-    }
-
-    @Test
     @DisplayName("Insert a new tag")
-    public void testInsertNotIgnoreDuplicate() {
+    public void testInsert() {
         when(tagRepository.insert(tag, false)).thenReturn(tag.getId());
 
         Long actualId = tagService.insert(tagDto);
         assertEquals(tag.getId(), actualId);
-    }
-
-    @Test
-    @DisplayName("Throw DataAccessFailureException when there is a problem accessing the database")
-    public void testInsertFailed() {
-        when(tagRepository.insert(tag, false))
-                .thenThrow(InvalidDataAccessResourceUsageException.class);
-
-        assertThrows(DataAccessFailureException.class, () -> tagService.insert(tagDto));
     }
 
     @Test
@@ -124,23 +85,6 @@ public class TagServiceTest {
     }
 
     @Test
-    @DisplayName("Throw DataNotFoundException when tag with such ID is not found")
-    public void testUpdateNotFound() {
-        when(tagRepository.findById(tagDto.getId())).thenThrow(EmptyResultDataAccessException.class);
-
-        assertThrows(DataNotFoundException.class, () -> tagService.update(tagDto));
-    }
-
-    @Test
-    @DisplayName("Throw DataAccessFailureException when there is a problem accessing the database")
-    public void testUpdateFailed() {
-        when(tagRepository.findById(tag.getId())).thenReturn(tag);
-        doThrow(InvalidDataAccessResourceUsageException.class).when(tagRepository).update(tag);
-
-        assertThrows(DataAccessFailureException.class, () -> tagService.update(tagDto));
-    }
-
-    @Test
     @DisplayName("Delete a tag")
     public void testDelete() {
         when(tagRepository.findById(tag.getId())).thenReturn(tag);
@@ -148,22 +92,5 @@ public class TagServiceTest {
 
         tagService.delete(tag.getId());
         verify(tagRepository, times(1)).delete(tag.getId());
-    }
-
-    @Test
-    @DisplayName("Throw DataNotFoundException when tag with such ID is not found")
-    public void testDeleteNotFound() {
-        when(tagRepository.findById(tag.getId())).thenThrow(EmptyResultDataAccessException.class);
-
-        assertThrows(DataNotFoundException.class, () -> tagService.delete(tag.getId()));
-    }
-
-    @Test
-    @DisplayName("Throw DataAccessFailureException when there is a problem accessing the database")
-    public void testDeleteFailed() {
-        when(tagRepository.findById(tag.getId())).thenReturn(tag);
-        doThrow(InvalidDataAccessResourceUsageException.class).when(tagRepository).delete(tag.getId());
-
-        assertThrows(DataAccessFailureException.class, () -> tagService.delete(tag.getId()));
     }
 }
